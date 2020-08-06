@@ -1,3 +1,4 @@
 {
-  "problem-file": "data/problem.txt"
+  "problem-file": "data/problem.txt",
+  "domain-file": "data/problem-domain.pddl"
 }

@@ -30,6 +30,7 @@ export class Puzzle {
   constructor(rows: number, columns: number) {
     this.rows = rows;
     this.columns = columns;
+    this.cars = [];
   }
 
   addCar(car: Car) {
@@ -54,13 +55,13 @@ function parsePuzzle(data: string): Puzzle {
     const car = new Car(numbers[0], numbers[1], numbers[2], numbers[3], orientation);
     puzzle.addCar(car);
   }
-  const exitParam = lines[noOfCars + 3].split(' ').map(e => parseInt(e));
+  const exitParam = lines[noOfCars + 2].split(' ').map(e => parseInt(e));
   puzzle.exit = [exitParam[0], exitParam[1]];
   return puzzle;
 }
 
 function readProblem(): string {
-  var configFile = fs.readFileSync('config.json');
+  var configFile = fs.readFileSync('src/config.json');
   var data = JSON.parse(configFile.toString());
   var problemFile = fs.readFileSync(data['problem-file']);
   return problemFile.toString();

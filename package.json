@@ -1,0 +1,17 @@
+{
+  "name": "block-game",
+  "version": "1.0.0",
+  "description": "A block game solver with classical planning",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc src/*.ts",
+    "watch": "npx tsc --watch src/*.ts",
+    "start": "npm run-script build && node src/index.js"
+  },
+  "author": "Deep Majumder",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.0.27",
+    "typescript": "^3.9.7"
+  }
+}

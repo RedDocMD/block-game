@@ -1,0 +1,4 @@
+data/*
+package-lock.json
+src/*.js
+node_modules/**

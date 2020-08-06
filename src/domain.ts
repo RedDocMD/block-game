@@ -1,11 +1,11 @@
 import * as fs from 'fs';
 import { Puzzle } from './parser';
 
-function writeMoveAction(buffer: string, direction: string, length: number) {
+function writeMoveAction(path: string, direction: string, length: number) {
   const actionName = `move-${direction}-${length}`;
-  fs.writeFileSync(buffer, `(:action ${actionName}\n`, { flag: 'a' });
+  fs.writeFileSync(path, `(:action ${actionName}\n`, { flag: 'a' });
 
-  fs.writeFileSync(buffer, ':parameters (?car)\n', { flag: 'a' });
+  fs.writeFileSync(path, ':parameters (?car)\n', { flag: 'a' });
 
   let precondition = ':precondition (and (is-car ?car)\n';
   if (direction === 'left' || direction === 'right') {
@@ -20,7 +20,7 @@ function writeMoveAction(buffer: string, direction: string, length: number) {
   precondition += '(in-car ?car ?sq1)\n';
   precondition += '(not (in-car ?car2 ?sq2))\n';
   precondition += `(in-${direction}-dist-${length} ?sq1 ?sq2))))\n`;
-  fs.writeFileSync(buffer, precondition, { flag: 'a' });
+  fs.writeFileSync(path, precondition, { flag: 'a' });
 
   let effect = ':effect (forall (?sq1 ?sq2) (when (and ';
   effect += '(is-sq ?sq1)\n';
@@ -30,14 +30,13 @@ function writeMoveAction(buffer: string, direction: string, length: number) {
   effect += '(and ';
   effect += '(not (in-car ?car ?sq1))\n';
   effect += '(in-car ?car ?sq2)))\n';
-  fs.writeFileSync(buffer, effect, { flag: 'a' });
+  fs.writeFileSync(path, effect, { flag: 'a' });
 
-  fs.writeFileSync(buffer, ')\n\n', { flag: 'a' });
+  fs.writeFileSync(path, ')\n\n', { flag: 'a' });
 }
 
 function writeMoves(path: string, puzzle: Puzzle) {
   const directions = ['right', 'left', 'up', 'down'];
-  fs.writeFileSync(path, '');
 
   for (let key in directions) {
     let limit: number;
@@ -53,10 +52,19 @@ function writeMoves(path: string, puzzle: Puzzle) {
   }
 }
 
+function writePredicates(path: string, puzzle: Puzzle) {
+
+}
+
 export function writeDomain(puzzle: Puzzle) {
   const configFile = fs.readFileSync('src/config.json');
   const data = JSON.parse(configFile.toString());
   const path = data['domain-file'];
 
+  fs.writeFileSync(path, '(define (domain BLOCK_PUZZLE)\n(:requirements :adl)\n');
+
   writeMoves(path, puzzle);
+  writePredicates(path, puzzle);
+
+  fs.writeFileSync(path, ')\n', { flag: 'a' });
 }

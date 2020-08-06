@@ -63,7 +63,7 @@ function parsePuzzle(data: string): Puzzle {
 function readProblem(): string {
   const configFile = fs.readFileSync('src/config.json');
   const data = JSON.parse(configFile.toString());
-  const problemFile = fs.readFileSync(data['problem-file']);
+  const problemFile = fs.readFileSync(data['description-file']);
   return problemFile.toString();
 }
 

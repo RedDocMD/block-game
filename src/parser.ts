@@ -18,6 +18,7 @@ export class Car {
     this.length = length;
     this.orientation = orientation;
     this.id = id;
+    
   }
 }
 
@@ -26,11 +27,15 @@ export class Puzzle {
   rows: number;
   columns: number;
   exit: [number, number];
+  domain_name: string;
+  problem_name: string;
 
   constructor(rows: number, columns: number) {
     this.rows = rows;
     this.columns = columns;
     this.cars = [];
+    this.domain_name = "BLOCK_DOMAIN";
+    this.problem_name = "BLOCK_PUZZLE";
   }
 
   addCar(car: Car) {

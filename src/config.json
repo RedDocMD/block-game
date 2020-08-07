@@ -1,4 +1,5 @@
 {
   "description-file": "data/problem.txt",
-  "domain-file": "data/problem-domain.pddl"
+  "domain-file": "data/problem-domain.pddl",
+  "problem-file": "data/problem.pddl"
 }

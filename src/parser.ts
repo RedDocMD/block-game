@@ -18,7 +18,6 @@ export class Car {
     this.length = length;
     this.orientation = orientation;
     this.id = id;
-    
   }
 }
 

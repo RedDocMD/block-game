@@ -120,6 +120,11 @@ function writeInit(path: string, puzzle: Puzzle) {
   fs.writeFileSync(path, `(:init ${init})\n`, { flag: 'a' });
 }
 
+function writeGoal(path: string, puzzle: Puzzle) {
+  let goal = `(:goal (in_car car_1 sq_${puzzle.exit[1]}_${puzzle.exit[0]}))\n`;
+  fs.writeFileSync(path, goal, { flag: 'a' });
+}
+
 export function writeProblem(puzzle: Puzzle) {
   const configFile = fs.readFileSync('src/config.json');
   const data = JSON.parse(configFile.toString());
@@ -129,6 +134,7 @@ export function writeProblem(puzzle: Puzzle) {
 
   writeObjects(path, puzzle);
   writeInit(path, puzzle);
+  writeGoal(path, puzzle);
 
   fs.writeFileSync(path, `)\n`, { flag: 'a' });
 }

@@ -56,7 +56,7 @@ function parsePuzzle(data: string): Puzzle {
     } else {
       orientation = Orientation.VERTICAL;
     }
-    const car = new Car(numbers[0], numbers[1], numbers[2], numbers[3], orientation);
+    const car = new Car(numbers[0], numbers[2], numbers[3], numbers[1], orientation);
     puzzle.addCar(car);
   }
   const exitParam = lines[noOfCars + 2].split(' ').map(e => parseInt(e));

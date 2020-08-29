@@ -1,0 +1,15 @@
+FROM node:12
+WORKDIR /classical_planner
+COPY package.json .
+RUN npm install
+RUN sudo apt install python3 git cmake make
+RUN git clone https://github.com/danfis/fast-downward.git
+WORKDIR /classical_planner/fast-downward/
+RUN python build.py -j4
+WORKDIR /classical_planner
+RUN mkdir src test
+COPY src/*.ts src/*.ts
+COPY src/config.json src/config.json
+COPY data/*.txt data/*.txt
+RUN npm run start
+CMD [""]

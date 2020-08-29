@@ -1,4 +1,4 @@
-FROM node:12.18.3-stretch
+FROM node:12.18.3-buster
 WORKDIR /classical_planner
 COPY package.json .
 RUN apt-get update
@@ -13,4 +13,4 @@ COPY src/*.ts src/
 COPY data/*.txt data/
 COPY src/config.json src/
 RUN npm run start
-CMD ["python3", "fast-downward.py", "data/problem-domain.pddl", "problem.pddl", "--search", "astar(lmcut())"]
+CMD ["python3", "downward/fast-downward.py", "data/problem-domain.pddl", "problem.pddl", "--search", "astar(lmcut())"]

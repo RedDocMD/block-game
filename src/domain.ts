@@ -83,7 +83,7 @@ export function writeDomain(puzzle: Puzzle) {
   const data = JSON.parse(configFile.toString());
   const path = data['domain-file'];
 
-  fs.writeFileSync(path, `(define (domain ${puzzle.domain_name})\n`);
+  fs.writeFileSync(path, `(define (domain ${puzzle.domain_name})\n(:requirements :adl)\n`);
 
   writePredicates(path, puzzle);
   writeMoves(path, puzzle);

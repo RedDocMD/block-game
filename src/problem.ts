@@ -130,7 +130,7 @@ export function writeProblem(puzzle: Puzzle) {
   const data = JSON.parse(configFile.toString());
   const path = data['problem-file'];
 
-  fs.writeFileSync(path, `(define (problem ${puzzle.problem_name})\n(:domain ${puzzle.domain_name})\n(:requirements adl)\n`);
+  fs.writeFileSync(path, `(define (problem ${puzzle.problem_name})\n(:domain ${puzzle.domain_name})\n`);
 
   writeObjects(path, puzzle);
   writeInit(path, puzzle);

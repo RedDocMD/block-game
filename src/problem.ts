@@ -37,9 +37,9 @@ function writeInit(path: string, puzzle: Puzzle) {
     const car = puzzle.cars[id];
     if (car.orientation == Orientation.HORIZONTAL) {
       init += `(is_horizontal car_${id + 1})\n`;
-      init += `(not (is_vertical car_${id + 1}))\n`;
+      // init += `(not (is_vertical car_${id + 1}))\n`;
     } else {
-      init += `(not (is_horizontal car_${id + 1}))\n`;
+      // init += `(not (is_horizontal car_${id + 1}))\n`;
       init += `(is_vertical car_${id + 1})\n`;
     }
   }
@@ -50,7 +50,7 @@ function writeInit(path: string, puzzle: Puzzle) {
         if (isInCar(car, i, j)) {
           init += `(in_car car_${id + 1} sq_${i}_${j})\n`
         } else {
-          init += `(not (in_car car_${id + 1} sq_${i}_${j}))\n`
+          // init += `(not (in_car car_${id + 1} sq_${i}_${j}))\n`
         }
       }
     }
@@ -67,7 +67,7 @@ function writeInit(path: string, puzzle: Puzzle) {
               if (innerSecond - innerFirst == dist) {
                 init += `(in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond})\n`;
               } else {
-                init += `(not (in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond}))\n`;
+                // init += `(not (in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond}))\n`;
               }
             }
           }
@@ -81,7 +81,7 @@ function writeInit(path: string, puzzle: Puzzle) {
               if (innerFirst - innerSecond == dist) {
                 init += `(in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond})\n`;
               } else {
-                init += `(not (in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond}))\n`;
+                // init += `(not (in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond}))\n`;
               }
             }
           }
@@ -95,7 +95,7 @@ function writeInit(path: string, puzzle: Puzzle) {
               if (innerSecond - innerFirst == dist) {
                 init += `(in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer})\n`;
               } else {
-                init += `(not (in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer}))\n`;
+                // init += `(not (in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer}))\n`;
               }
             }
           }
@@ -109,7 +109,7 @@ function writeInit(path: string, puzzle: Puzzle) {
               if (innerFirst - innerSecond == dist) {
                 init += `(in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer})\n`;
               } else {
-                init += `(not (in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer}))\n`;
+                // init += `(not (in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer}))\n`;
               }
             }
           }
@@ -130,7 +130,7 @@ export function writeProblem(puzzle: Puzzle) {
   const data = JSON.parse(configFile.toString());
   const path = data['problem-file'];
 
-  fs.writeFileSync(path, `(define (problem ${puzzle.problem_name})\n(:domain ${puzzle.domain_name})\n`);
+  fs.writeFileSync(path, `(define (problem ${puzzle.problem_name})\n(:domain ${puzzle.domain_name})\n(:requirements adl)\n`);
 
   writeObjects(path, puzzle);
   writeInit(path, puzzle);

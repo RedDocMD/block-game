@@ -71,6 +71,10 @@ function writeInit(path: string, puzzle: Puzzle) {
           init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${secondStop} sq_${i}_${second})\n`;
           init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${second} sq_${i}_${secondStop})\n`;
           init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${secondStop} sq_${i}_${second})\n`;
+          init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${first} sq_${i}_${firstStop})\n`;
+          init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${firstStop} sq_${i}_${first})\n`;
+          init += `(is_same_distance sq_${i}_${secondStop} sq_${i}_${second} sq_${i}_${first} sq_${i}_${firstStop})\n`;
+          init += `(is_same_distance sq_${i}_${secondStop} sq_${i}_${second} sq_${i}_${firstStop} sq_${i}_${first})\n`;
         }
       }
     }
@@ -85,6 +89,10 @@ function writeInit(path: string, puzzle: Puzzle) {
           init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
           init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
           init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
+          init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
+          init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${firstStop}_${j} sq_${first}_${j})\n`;
+          init += `(is_same_distance sq_${secondStop}_${j} sq_${second}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
+          init += `(is_same_distance sq_${secondStop}_${j} sq_${second}_${j} sq_${firstStop}_${j} sq_${first}_${j})\n`;
         }
       }
     }

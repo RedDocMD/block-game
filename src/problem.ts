@@ -68,9 +68,28 @@ function writeInit(path: string, puzzle: Puzzle) {
           const firstStop = first + len - 1;
           const secondStop = second + len - 1;
           init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${second} sq_${i}_${secondStop})\n`;
+          init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${secondStop} sq_${i}_${second})\n`;
+          init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${second} sq_${i}_${secondStop})\n`;
+          init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${secondStop} sq_${i}_${second})\n`;
         }
       }
     }
+  }
+  for (let j = 1; j <= puzzle.columns; j++) {
+    for (let len = 1; len <= puzzle.rows; len++) {
+      for (let first = 1; first <= puzzle.rows - len + 1; first++) {
+        for (let second = first + 1; second <= puzzle.rows - len + 1; second++) {
+          const firstStop = first + len - 1;
+          const secondStop = second + len - 1;
+          init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
+          init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
+          init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
+          init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
+        }
+      }
+    }
+  }
+  for (let i = 1; i <= puzzle.rows; i++) {
   }
   fs.writeFileSync(path, `(:init ${init})\n`, { flag: 'a' });
 }

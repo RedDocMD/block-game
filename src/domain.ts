@@ -18,7 +18,7 @@ function writeMoveAction(path: string, direction: string, length: number) {
   precondition += '(is_sq ?sq1)\n';
   precondition += '(is_sq ?sq2)\n';
   precondition += '(in_car ?car ?sq1)\n';
-  precondition += '(is_clear ?sq2)\n';
+  precondition += '(not (is_occupied ?sq2))\n';
   precondition += `(in_${direction}_dist_${length} ?sq1 ?sq2))))\n`;
   fs.writeFileSync(path, precondition, { flag: 'a' });
 
@@ -28,8 +28,8 @@ function writeMoveAction(path: string, direction: string, length: number) {
   effect += '(in_car ?car ?sq1)\n';
   effect += `(in_${direction}_dist_${length} ?sq1 ?sq2))\n`;
   effect += '(and ';
-  effect += '(not (is_clear ?sq2))\n';
-  effect += '(is_clear ?sq1)\n';
+  effect += '(not (is_occupied ?sq1))\n';
+  effect += '(is_occupied ?sq2)\n';
   effect += '(not (in_car ?car ?sq1))\n';
   effect += '(in_car ?car ?sq2))))\n';
   fs.writeFileSync(path, effect, { flag: 'a' });
@@ -58,7 +58,7 @@ function writePredicates(path: string, puzzle: Puzzle) {
   fs.writeFileSync(path, '(:predicates ', { flag : 'a' });
   fs.writeFileSync(path, '(is_sq ?sq)\n', { flag: 'a' });
   fs.writeFileSync(path, '(is_car ?car)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(is_clear ?sq)\n', { flag: 'a' });
+  fs.writeFileSync(path, '(is_occupied ?sq)\n', { flag: 'a' });
   fs.writeFileSync(path, '(in_car ?car ?sq)\n', { flag: 'a' });
   fs.writeFileSync(path, '(is_vertical ?car)\n', { flag: 'a' });
   fs.writeFileSync(path, '(is_horizontal ?car)\n', { flag: 'a' });

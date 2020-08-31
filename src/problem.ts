@@ -4,15 +4,17 @@ import { Puzzle, Car, Orientation } from './parser';
 function writeObjects(path: string, puzzle: Puzzle) {
   let objects = '';
   for (let i = 1; i <= puzzle.cars.length; i++) {
-    objects += `car_${i}\n`;
+    objects += `car_${i} `;
   }
+  objects += `- car\n`;
   for (let i = 1; i <= puzzle.rows; i++) {
     for (let j = 1; j <= puzzle.columns; j++) {
-      objects += `sq_${i}_${j}\n`;
+      objects += `sq_${i}_${j} `;
     }
   }
+  objects += `- square\n`
 
-  fs.writeFileSync(path, `(:objects\n${objects}\n)\n\n`, { flag: 'a' });
+  fs.writeFileSync(path, `(:objects\n${objects})\n\n`, { flag: 'a' });
 }
 
 function isInCar(car: Car, i: number, j: number): boolean {
@@ -25,14 +27,6 @@ function isInCar(car: Car, i: number, j: number): boolean {
 
 function writeInit(path: string, puzzle: Puzzle) {
   let init = '';
-  for (let i = 1; i <= puzzle.cars.length; i++) {
-    init += `(is_car car_${i})\n`;
-  }
-  for (let i = 1; i <= puzzle.rows; i++) {
-    for (let j = 1; j <= puzzle.columns; j++) {
-      init += `(is_sq sq_${i}_${j})\n`;
-    }
-  }
   for (let id = 0; id < puzzle.cars.length; id++) {
     const car = puzzle.cars[id];
     if (car.orientation == Orientation.HORIZONTAL) {
@@ -41,67 +35,39 @@ function writeInit(path: string, puzzle: Puzzle) {
       init += `(is_vertical car_${id + 1})\n`;
     }
   }
-  for (let id = 0; id < puzzle.cars.length; id++) {
-    const car = puzzle.cars[id];
-    for (let i = 1; i <= puzzle.rows; i++) {
-      for (let j = 1; j <= puzzle.columns; j++) {
-        if (isInCar(car, i, j)) {
-          init += `(in_car car_${id + 1} sq_${i}_${j})\n`
-          init += `(is_occupied sq_${i}_${j})\n`;
-        }
+  for (let i = 1; i <= puzzle.rows; i++) {
+    for (let first = 1; first <= puzzle.columns; first++) {
+      for (let second = first + 1; second <= puzzle.columns; second++) {
+        init += `(is_left_of sq_${i}_${first} sq_${i}_${second})\n`;
+        init += `(is_right_of sq_${i}_${second} sq_${i}_${first})\n`;
       }
     }
   }
-  const directions = ['right', 'left', 'up', 'down'];
-
-  for (let key in directions) {
-    let direction = directions[key];
-    if (direction === 'right') {
-      for (let dist = 1; dist < puzzle.columns; dist++) {
-        for (let outer = 1; outer <= puzzle.rows; outer++) {
-          for (let innerFirst = 1; innerFirst <= puzzle.columns; innerFirst++) {
-            for (let innerSecond = 1; innerSecond <= puzzle.columns; innerSecond++) {
-              if (innerSecond - innerFirst == dist) {
-                init += `(in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond})\n`;
-              }
-            }
-          }
-        }
+  for (let j = 1; j <= puzzle.columns; j++) {
+    for (let first = 1; first <= puzzle.rows; first++) {
+      for (let second = first + 1; second <= puzzle.rows; second++) {
+        init += `(is_top_of sq_${first}_${j} sq_${second}_${j})\n`;
+        init += `(is_down_of sq_${second}_${j} sq_${first}_${j})\n`;
       }
-    } else if (direction === 'left') {
-      for (let dist = 1; dist < puzzle.columns; dist++) {
-        for (let outer = 1; outer <= puzzle.rows; outer++) {
-          for (let innerFirst = 1; innerFirst <= puzzle.columns; innerFirst++) {
-            for (let innerSecond = 1; innerSecond <= puzzle.columns; innerSecond++) {
-              if (innerFirst - innerSecond == dist) {
-                init += `(in_${direction}_dist_${dist} sq_${outer}_${innerFirst} sq_${outer}_${innerSecond})\n`;
-              }
-            }
-          }
-        }
-      }
-    } else if (direction === 'down') {
-      for (let dist = 1; dist < puzzle.rows; dist++) {
-        for (let outer = 1; outer <= puzzle.columns; outer++) {
-          for (let innerFirst = 1; innerFirst <= puzzle.rows; innerFirst++) {
-            for (let innerSecond = 1; innerSecond <= puzzle.rows; innerSecond++) {
-              if (innerSecond - innerFirst == dist) {
-                init += `(in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer})\n`;
-              }
-            }
-          }
-        }
-      }
-    } else if (direction === 'up') {
-      for (let dist = 1; dist < puzzle.rows; dist++) {
-        for (let outer = 1; outer <= puzzle.columns; outer++) {
-          for (let innerFirst = 1; innerFirst <= puzzle.rows; innerFirst++) {
-            for (let innerSecond = 1; innerSecond <= puzzle.rows; innerSecond++) {
-              if (innerFirst - innerSecond == dist) {
-                init += `(in_${direction}_dist_${dist} sq_${innerFirst}_${outer} sq_${innerSecond}_${outer})\n`;
-              }
-            }
-          }
+    }
+  }
+  for (let id = 1; id <= puzzle.cars.length; id++) {
+    const car = puzzle.cars[id - 1];
+    if (car.orientation === Orientation.HORIZONTAL) {
+      init += `(is_leftmost car_${id} sq_${car.startY}_${car.startX})\n`;
+      init += `(is_rightmost car_${id} sq_${car.startY}_${car.startX + car.length - 1})\n`;
+    } else {
+      init += `(is_topmost car_${id} sq_${car.startY}_${car.startX})\n`;
+      init += `(is_rightmost car_${id} sq_${car.startY + car.length - 1}_${car.startX})\n`;
+    }
+  }
+  for (let i = 1; i <= puzzle.rows; i++) {
+    for (let len = 1; len <= puzzle.columns; len++) {
+      for (let first = 1; first <= puzzle.columns - len + 1; first++) {
+        for (let second = first + 1; second <= puzzle.columns - len + 1; second++) {
+          const firstStop = first + len - 1;
+          const secondStop = second + len - 1;
+          init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${second} sq_${i}_${secondStop})\n`;
         }
       }
     }
@@ -119,7 +85,10 @@ export function writeProblem(puzzle: Puzzle) {
   const data = JSON.parse(configFile.toString());
   const path = data['problem-file'];
 
-  fs.writeFileSync(path, `(define (problem ${puzzle.problem_name})\n(:domain ${puzzle.domain_name})\n`);
+  fs.writeFileSync(path, 
+`(define (problem ${puzzle.problem_name})
+(:domain ${puzzle.domain_name})
+`);
 
   writeObjects(path, puzzle);
   writeInit(path, puzzle);

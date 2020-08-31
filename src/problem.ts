@@ -47,6 +47,7 @@ function writeInit(path: string, puzzle: Puzzle) {
       for (let j = 1; j <= puzzle.columns; j++) {
         if (isInCar(car, i, j)) {
           init += `(in_car car_${id + 1} sq_${i}_${j})\n`
+          init += `(is_occupied sq_${i}_${j})\n`;
         }
       }
     }

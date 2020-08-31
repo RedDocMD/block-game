@@ -136,7 +136,18 @@ function writeInit(path: string, puzzle: Puzzle) {
 }
 
 function writeGoal(path: string, puzzle: Puzzle) {
-  let goal = `(:goal (in_car car_1 sq_${puzzle.exit[1]}_${puzzle.exit[0]}))\n`;
+  let iExit = puzzle.exit[1];
+  let jExit = puzzle.exit[0];
+  let goal: string;
+  if (jExit === 1) {
+    goal = `(:goal (is_leftmost car_1 sq_${iExit}_${jExit}))\n`;
+  } else if (jExit === puzzle.columns) {
+    goal = `(:goal (is_rightmost car_1 sq_${iExit}_${jExit}))\n`;
+  } else if (iExit === 1) {
+    goal = `(:goal (is_topmost car_1 sq_${iExit}_${jExit}))\n`;
+  } else {
+    goal = `(:goal (is_bottommost car_1 sq_${iExit}_${jExit}))\n`;
+  }
   fs.writeFileSync(path, goal, { flag: 'a' });
 }
 

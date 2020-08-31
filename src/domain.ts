@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import { Puzzle } from './parser';
-import { join } from 'path';
 
 function writeMoveAction(path: string, direction: string, length: number) {
   const actionName = `move_${direction}_${length}`;
@@ -54,31 +53,25 @@ function writeMoves(path: string, puzzle: Puzzle) {
   }
 }
 
-function writePredicates(path: string, puzzle: Puzzle) {
-  fs.writeFileSync(path, '(:predicates ', { flag : 'a' });
-  fs.writeFileSync(path, '(is_sq ?sq)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(is_car ?car)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(is_occupied ?sq)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(in_car ?car ?sq)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(is_vertical ?car)\n', { flag: 'a' });
-  fs.writeFileSync(path, '(is_horizontal ?car)\n', { flag: 'a' });
+function writePredicates(path: string) {
+  const predicates = 
+`(:predicates
+  (is_horizontal ?car - car)
+  (is_vertical ?car - car)
+  (is_left_of ?sq1 - square ?sq2 - square)
+  (is_right_of ?sq1 - square ?sq2 - square)
+  (is_top_of ?sq1 - square ?sq2 - square)
+  (is_bottom_of ?sq1 - square ?sq2 - square)
+  (is_leftmost ?car - car ?sq - square)
+  (is_rightmost ?car - car ?sq - square)
+  (is_topmost ?car - car ?sq - square)
+  (is_bottommost ?car - car ?sq - square)
+  (is_same_distance ?sq1 ?sq2 ?sq3 ?sq4 - square)
+  (is_between ?sq_first ?sq_second ?sq - square)
+  (is_clear ?sq - square)
+ )`;
 
-  const directions = ['right', 'left', 'up', 'down'];
-
-  for (let key in directions) {
-    let limit: number;
-    let direction = directions[key];
-    if (direction === 'left' || direction === 'right') {
-      limit = puzzle.columns;
-    } else {
-      limit = puzzle.rows;
-    }
-    for (let i = 1; i < limit; i++) {
-      fs.writeFileSync(path, `(in_${direction}_dist_${i} ?sq1 ?sq2)\n`, { flag: 'a' });
-    }
-  }
-
-  fs.writeFileSync(path, ')\n', { flag: 'a' });
+  fs.writeFileSync(path, predicates, { flag: 'a' });
 }
 
 export function writeDomain(puzzle: Puzzle) {
@@ -86,11 +79,12 @@ export function writeDomain(puzzle: Puzzle) {
   const data = JSON.parse(configFile.toString());
   const path = data['domain-file'];
 
-  fs.writeFileSync(path, `(define (domain ${puzzle.domain_name})\n(:requirements :adl)\n`);
+  fs.writeFileSync(path, 
+`(define (domain ${puzzle.domain_name})
+(:requirements :adl :typing)
+(:types car square)
+`);
 
-  writePredicates(path, puzzle);
-  writeMoves(path, puzzle);
-  
-
+  writePredicates(path);  
   fs.writeFileSync(path, ')\n', { flag: 'a' });
 }

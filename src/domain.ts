@@ -51,7 +51,7 @@ function writeMoveAction(path: string, direction: string) {
 }
 
 function writeMoves(path: string) {
-  const directions = ['right', 'left', 'up', 'down'];
+  const directions = ['right', 'left', 'top', 'bottom'];
 
   for (let key in directions) {
     let direction = directions[key];

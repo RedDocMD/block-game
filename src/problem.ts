@@ -98,6 +98,39 @@ function writeInit(path: string, puzzle: Puzzle) {
     }
   }
   for (let i = 1; i <= puzzle.rows; i++) {
+    for (let first = 1; first <= puzzle.columns; first++) {
+      for (let second = first + 1; second <= puzzle.columns; second++) {
+        for (let j = first + 1; j <= second; j++) {
+          init += `(is_in_between sq_${i}_${first} sq_${i}_${second} sq_${i}_${j})\n`;
+          init += `(is_in_between sq_${i}_${second} sq_${i}_${first} sq_${i}_${j})\n`;
+        }
+      }
+    }
+  }
+  for (let j = 1; j <= puzzle.columns; j++) {
+    for (let first = 1; first <= puzzle.rows; first++) {
+      for (let second = first + 1; second <= puzzle.rows; second++) {
+        for (let i = first + 1; i <= second; i++){
+          init += `(is_in_between sq_${first}_${j} sq_${second}_${j} sq_${i}_${j})\n`;
+          init += `(is_in_between sq_${second}_${j} sq_${first}_${j} sq_${i}_${j})\n`;
+        }
+      }
+    }
+  }
+  for (let i = 1; i <= puzzle.rows; i++) {
+    for (let j = 1; j <= puzzle.columns; j++) {
+      let inCar = false;
+      for (let id in puzzle.cars) {
+        const car = puzzle.cars[id];
+        if (isInCar(car, i, j)) {
+          inCar = true;
+          break;
+        }
+      }
+      if (!inCar) {
+        init += `(is_clear sq_${i}_${j})\n`;
+      }
+    }
   }
   fs.writeFileSync(path, `(:init ${init})\n`, { flag: 'a' });
 }

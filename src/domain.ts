@@ -17,7 +17,7 @@ function writeMoveAction(path: string, direction: string) {
   :parameters (?car - car ?from_${start} ?from_${end} ?to_${start} ?to_${end} - square)
   :precondition (forall (?sq - square)
                   (and 
-                    (or (not (is_between ?from_${start} ?to_${start} ?sq))
+                    (or (not (is_between ?from_${direction} ?to_${direction} ?sq))
                       (is_clear ?sq)
                     )
                     (is_${axis} ?car)

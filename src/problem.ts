@@ -67,19 +67,8 @@ function writeInit(path: string, puzzle: Puzzle) {
         for (let second = first + 1; second <= puzzle.columns - len + 1; second++) {
           const firstStop = first + len - 1;
           const secondStop = second + len - 1;
-          if (len > 1) {
-            init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${second} sq_${i}_${secondStop})\n`;
-            init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${secondStop} sq_${i}_${second})\n`;
-            init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${second} sq_${i}_${secondStop})\n`;
-            init += `(is_same_distance sq_${i}_${firstStop} sq_${i}_${first} sq_${i}_${secondStop} sq_${i}_${second})\n`;
-            init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${first} sq_${i}_${firstStop})\n`;
-            init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${firstStop} sq_${i}_${first})\n`;
-            init += `(is_same_distance sq_${i}_${secondStop} sq_${i}_${second} sq_${i}_${first} sq_${i}_${firstStop})\n`;
-            init += `(is_same_distance sq_${i}_${secondStop} sq_${i}_${second} sq_${i}_${firstStop} sq_${i}_${first})\n`;
-          } else {
-            init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${second} sq_${i}_${secondStop})\n`;
-            init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${first} sq_${i}_${firstStop})\n`;
-          }
+          init += `(is_same_distance sq_${i}_${first} sq_${i}_${firstStop} sq_${i}_${second} sq_${i}_${secondStop})\n`;
+          init += `(is_same_distance sq_${i}_${second} sq_${i}_${secondStop} sq_${i}_${first} sq_${i}_${firstStop})\n`;
         }
       }
     }
@@ -90,19 +79,8 @@ function writeInit(path: string, puzzle: Puzzle) {
         for (let second = first + 1; second <= puzzle.rows - len + 1; second++) {
           const firstStop = first + len - 1;
           const secondStop = second + len - 1;
-          if (len > 1) {
-            init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
-            init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
-            init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
-            init += `(is_same_distance sq_${firstStop}_${j} sq_${first}_${j} sq_${secondStop}_${j} sq_${second}_${j})\n`;
-            init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
-            init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${firstStop}_${j} sq_${first}_${j})\n`;
-            init += `(is_same_distance sq_${secondStop}_${j} sq_${second}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
-            init += `(is_same_distance sq_${secondStop}_${j} sq_${second}_${j} sq_${firstStop}_${j} sq_${first}_${j})\n`;
-          } else {
-            init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
-            init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
-          }
+          init += `(is_same_distance sq_${first}_${j} sq_${firstStop}_${j} sq_${second}_${j} sq_${secondStop}_${j})\n`;
+          init += `(is_same_distance sq_${second}_${j} sq_${secondStop}_${j} sq_${first}_${j} sq_${firstStop}_${j})\n`;
         }
       }
     }
@@ -112,7 +90,13 @@ function writeInit(path: string, puzzle: Puzzle) {
       for (let second = first + 1; second <= puzzle.columns; second++) {
         for (let j = first + 1; j <= second; j++) {
           init += `(is_in_between sq_${i}_${first} sq_${i}_${second} sq_${i}_${j})\n`;
-          init += `(is_in_between sq_${i}_${second} sq_${i}_${first} sq_${i}_${j})\n`;
+        }
+      }
+    }
+    for (let first = puzzle.columns; first >= 1; first--) {
+      for (let second = first - 1; second >= 1; second--) {
+        for (let j = first - 1; j >= second; j--) {
+          init += `(is_in_between sq_${i}_${first} sq_${i}_${second} sq_${i}_${j})\n`;
         }
       }
     }
@@ -122,7 +106,13 @@ function writeInit(path: string, puzzle: Puzzle) {
       for (let second = first + 1; second <= puzzle.rows; second++) {
         for (let i = first + 1; i <= second; i++){
           init += `(is_in_between sq_${first}_${j} sq_${second}_${j} sq_${i}_${j})\n`;
-          init += `(is_in_between sq_${second}_${j} sq_${first}_${j} sq_${i}_${j})\n`;
+        }
+      }
+    }
+    for (let first = puzzle.rows; first >= 1; first--) {
+      for (let second = first - 1; second >= 1; second--) {
+        for (let i = first - 1; i >= second; i--) {
+          init += `(is_in_between sq_${first}_${j} sq_${second}_${j} sq_${i}_${j})\n`;
         }
       }
     }
